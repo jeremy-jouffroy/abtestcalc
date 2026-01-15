@@ -317,6 +317,75 @@ header h1 {
     color: #667eea;
 }
 
+/* Recommendations */
+.recommendations {
+    margin-top: 30px;
+    padding: 24px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.recommendations h3 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+}
+
+.recommendation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.recommendation-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.recommendation-item.valid {
+    background: #d4edda;
+    border-left: 4px solid #28a745;
+}
+
+.recommendation-item.invalid {
+    background: #f8d7da;
+    border-left: 4px solid #dc3545;
+}
+
+.rec-icon {
+    font-size: 1.5em;
+    font-weight: bold;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.rec-icon.valid {
+    color: #28a745;
+    background: #c3e6cb;
+}
+
+.rec-icon.invalid {
+    color: #dc3545;
+    background: #f5c6cb;
+}
+
+.rec-text {
+    font-size: 1em;
+    color: #333;
+    font-weight: 500;
+}
+
 /* Verdict */
 .verdict {
     padding: 20px;

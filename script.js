@@ -91,7 +91,42 @@ function calculateSampleSize() {
     document.getElementById('total-sample').textContent = totalSample.toLocaleString();
     document.getElementById('duration').textContent = `${duration} days`;
     document.getElementById('expected-variant-conv').textContent = (variantConv * 100).toFixed(2) + '%';
+
+    // Check recommendations
+    checkRecommendations(samplePerVariant, duration);
+
     document.getElementById('sample-results').style.display = 'block';
+}
+
+// Check recommendations and update UI
+function checkRecommendations(samplePerVariant, duration) {
+    // Recommendation 1: Minimum 5000 visitors per variant
+    const recVisitors = document.getElementById('rec-visitors');
+    const hasMinVisitors = samplePerVariant >= 5000;
+    updateRecommendation(recVisitors, hasMinVisitors);
+
+    // Recommendation 2: Minimum 14 days
+    const recMinDuration = document.getElementById('rec-min-duration');
+    const hasMinDuration = duration >= 14;
+    updateRecommendation(recMinDuration, hasMinDuration);
+
+    // Recommendation 3: Maximum 42 days
+    const recMaxDuration = document.getElementById('rec-max-duration');
+    const hasMaxDuration = duration <= 42;
+    updateRecommendation(recMaxDuration, hasMaxDuration);
+}
+
+function updateRecommendation(element, isValid) {
+    const icon = element.querySelector('.rec-icon');
+    if (isValid) {
+        icon.textContent = '✓';
+        icon.className = 'rec-icon valid';
+        element.className = 'recommendation-item valid';
+    } else {
+        icon.textContent = '✗';
+        icon.className = 'rec-icon invalid';
+        element.className = 'recommendation-item invalid';
+    }
 }
 
 // Analyze Test - Frequentist approach
