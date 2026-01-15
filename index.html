@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="1.4.0">
+    <meta name="version" content="1.5.0">
     <meta name="build-date" content="2026-01-15">
     <meta name="description" content="A/B Test Calculator with Frequentist and Bayesian statistical analysis">
     <meta name="author" content="jeremy-jouffroy">
@@ -144,6 +144,11 @@
             <p class="description">Evaluate statistical significance using both Frequentist and Bayesian approaches.</p>
 
             <div class="method-selector">
+                <div class="method-selector-header">
+                    <span class="method-title">Statistical Method</span>
+                    <span class="tooltip-icon">ⓘ</span>
+                    <span class="tooltip method-tooltip">Choose your analysis approach:<br><br><strong>Frequentist:</strong> Traditional hypothesis testing with p-values. Tells you if results are "statistically significant" (p < 0.05). Good for binary decisions.<br><br><strong>Bayesian:</strong> Calculates probability that one variant is better. Provides probability statements (e.g., "95% chance B beats A"). Better for understanding magnitude of difference and making business decisions.</span>
+                </div>
                 <label class="method-label">
                     <input type="radio" name="method" value="frequentist" checked>
                     <span>Frequentist (p-value, confidence intervals)</span>
@@ -188,22 +193,38 @@
 
             <!-- Bayesian-specific inputs -->
             <div id="bayesian-inputs" class="bayesian-section" style="display: none;">
-                <h3>Bayesian Priors (Optional)</h3>
+                <div class="bayesian-header">
+                    <h3>Bayesian Priors (Optional)</h3>
+                    <span class="tooltip-icon bayesian-tooltip-icon">ⓘ</span>
+                    <span class="tooltip bayesian-main-tooltip">Priors represent your beliefs before seeing the data. Default values (α=1, β=1) represent no prior knowledge (uniform prior).<br><br><strong>When to adjust:</strong> If you have historical data or strong beliefs about conversion rates, you can encode that knowledge here. For most cases, leave defaults.</span>
+                </div>
                 <p class="help-text">Leave default for non-informative priors</p>
 
                 <div class="calculator-grid">
                     <div class="input-group">
-                        <label for="prior-alpha">Prior Alpha (α)</label>
+                        <label for="prior-alpha">
+                            Prior Alpha (α)
+                            <span class="tooltip-icon">ⓘ</span>
+                            <span class="tooltip">Number of prior "successes" in your belief. Higher values mean you believe conversion rate is higher.<br><br><strong>Example:</strong> If historically you've seen 10 conversions out of 100 visitors, you might use α=10. Default α=1 means no strong prior belief.</span>
+                        </label>
                         <input type="number" id="prior-alpha" step="0.1" min="0.1" value="1">
                         <span class="help-text">Success parameter</span>
                     </div>
                     <div class="input-group">
-                        <label for="prior-beta">Prior Beta (β)</label>
+                        <label for="prior-beta">
+                            Prior Beta (β)
+                            <span class="tooltip-icon">ⓘ</span>
+                            <span class="tooltip">Number of prior "failures" in your belief. Higher values mean you believe conversion rate is lower.<br><br><strong>Example:</strong> If historically you've seen 90 non-conversions out of 100 visitors, you might use β=90. Default β=1 means no strong prior belief.</span>
+                        </label>
                         <input type="number" id="prior-beta" step="0.1" min="0.1" value="1">
                         <span class="help-text">Failure parameter</span>
                     </div>
                     <div class="input-group">
-                        <label for="monte-carlo-samples">Monte Carlo Samples</label>
+                        <label for="monte-carlo-samples">
+                            Monte Carlo Samples
+                            <span class="tooltip-icon">ⓘ</span>
+                            <span class="tooltip">Number of random samples used to calculate probabilities. More samples = more accurate results but slower.<br><br><strong>Example:</strong> 100,000 samples (default) is accurate for most cases. Use 1,000,000 for very precise results or when probabilities are close to 50%.</span>
+                        </label>
                         <input type="number" id="monte-carlo-samples" min="1000" max="1000000" step="1000" value="100000">
                         <span class="help-text">Higher = more accurate</span>
                     </div>
@@ -274,7 +295,7 @@
         <footer>
             <p>This calculator uses both Frequentist and Bayesian statistical methods for robust A/B test analysis.</p>
             <p class="warning">⚠ Warning: Do not "peek" at results before reaching your planned sample size, as this increases false positive rates.</p>
-            <p class="version-info">Version 1.4.0 | Build Date: 2026-01-15</p>
+            <p class="version-info">Version 1.5.0 | Build Date: 2026-01-15</p>
         </footer>
     </div>
 

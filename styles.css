@@ -222,11 +222,31 @@ header h1 {
 /* Method Selector */
 .method-selector {
     display: flex;
-    gap: 20px;
+    flex-direction: column;
+    gap: 15px;
     margin-bottom: 30px;
     padding: 20px;
     background: #f8f9fa;
     border-radius: 8px;
+}
+
+.method-selector-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+    position: relative;
+}
+
+.method-title {
+    font-weight: 600;
+    font-size: 1.05em;
+    color: #333;
+}
+
+.method-tooltip {
+    width: 400px;
+    max-width: 90vw;
 }
 
 .method-label {
@@ -287,9 +307,26 @@ header h1 {
     border-left: 4px solid #ffc107;
 }
 
+.bayesian-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
 .bayesian-section h3 {
     color: #856404;
-    margin-bottom: 10px;
+    margin: 0;
+}
+
+.bayesian-tooltip-icon {
+    background: #ffc107;
+}
+
+.bayesian-main-tooltip {
+    width: 380px;
+    max-width: 90vw;
 }
 
 .bayesian-section .help-text {
