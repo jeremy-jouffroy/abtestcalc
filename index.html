@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="1.5.0">
+    <meta name="version" content="2.0.0">
     <meta name="build-date" content="2026-01-15">
     <meta name="description" content="A/B Test Calculator with Frequentist and Bayesian statistical analysis">
     <meta name="author" content="jeremy-jouffroy">
@@ -159,36 +159,43 @@
                 </label>
             </div>
 
-            <div class="variants-container">
-                <div class="variant-input">
+            <div class="variants-container" id="variants-container">
+                <div class="variant-input control-variant">
                     <h3>Control (A)</h3>
                     <div class="input-group">
                         <label for="control-visitors">Visitors</label>
-                        <input type="number" id="control-visitors" min="0" value="10000">
+                        <input type="number" class="variant-visitors-input" data-variant="control" min="0" value="10000">
                     </div>
                     <div class="input-group">
                         <label for="control-conversions">Conversions</label>
-                        <input type="number" id="control-conversions" min="0" value="500">
+                        <input type="number" class="variant-conversions-input" data-variant="control" min="0" value="500">
                     </div>
                     <div class="conversion-rate">
-                        <span>Conversion Rate: <strong id="control-rate">5.00%</strong></span>
+                        <span>Conversion Rate: <strong class="variant-rate-display" data-variant="control">5.00%</strong></span>
                     </div>
                 </div>
 
-                <div class="variant-input">
-                    <h3>Variant (B)</h3>
-                    <div class="input-group">
-                        <label for="variant-visitors">Visitors</label>
-                        <input type="number" id="variant-visitors" min="0" value="10000">
+                <div class="variant-input test-variant" data-variant-id="1">
+                    <div class="variant-header">
+                        <h3>Variant B</h3>
                     </div>
                     <div class="input-group">
-                        <label for="variant-conversions">Conversions</label>
-                        <input type="number" id="variant-conversions" min="0" value="550">
+                        <label>Visitors</label>
+                        <input type="number" class="variant-visitors-input" data-variant="1" min="0" value="10000">
+                    </div>
+                    <div class="input-group">
+                        <label>Conversions</label>
+                        <input type="number" class="variant-conversions-input" data-variant="1" min="0" value="550">
                     </div>
                     <div class="conversion-rate">
-                        <span>Conversion Rate: <strong id="variant-rate">5.50%</strong></span>
+                        <span>Conversion Rate: <strong class="variant-rate-display" data-variant="1">5.50%</strong></span>
                     </div>
                 </div>
+            </div>
+
+            <div class="variant-controls">
+                <button class="add-variant-btn" onclick="addVariant()" id="add-variant-btn">+ Add Variant</button>
+                <span class="variant-count-text">Testing <strong id="variant-count">2</strong> variants (max 5)</span>
             </div>
 
             <!-- Bayesian-specific inputs -->
@@ -295,7 +302,7 @@
         <footer>
             <p>This calculator uses both Frequentist and Bayesian statistical methods for robust A/B test analysis.</p>
             <p class="warning">⚠ Warning: Do not "peek" at results before reaching your planned sample size, as this increases false positive rates.</p>
-            <p class="version-info">Version 1.5.0 | Build Date: 2026-01-15</p>
+            <p class="version-info">Version 2.0.0 | Build Date: 2026-01-15</p>
         </footer>
     </div>
 

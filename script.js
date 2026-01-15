@@ -25,21 +25,101 @@ document.querySelectorAll('input[name="method"]').forEach(radio => {
     });
 });
 
+// Multi-variant management
+let variantCounter = 1;
+const variantLabels = ['B', 'C', 'D', 'E'];
+
+function updateConversionRates() {
+    document.querySelectorAll('.variant-visitors-input').forEach(input => {
+        const variantId = input.dataset.variant;
+        const visitorsInput = input;
+        const conversionsInput = document.querySelector(`.variant-conversions-input[data-variant="${variantId}"]`);
+        const rateDisplay = document.querySelector(`.variant-rate-display[data-variant="${variantId}"]`);
+
+        if (visitorsInput && conversionsInput && rateDisplay) {
+            const visitors = parseFloat(visitorsInput.value) || 0;
+            const conversions = parseFloat(conversionsInput.value) || 0;
+            const rate = visitors > 0 ? (conversions / visitors * 100) : 0;
+            rateDisplay.textContent = rate.toFixed(2) + '%';
+        }
+    });
+}
+
 // Real-time conversion rate updates
-['control', 'variant'].forEach(type => {
-    const visitorsInput = document.getElementById(`${type}-visitors`);
-    const conversionsInput = document.getElementById(`${type}-conversions`);
-    const rateDisplay = document.getElementById(`${type}-rate`);
+document.addEventListener('input', (e) => {
+    if (e.target.classList.contains('variant-visitors-input') ||
+        e.target.classList.contains('variant-conversions-input')) {
+        updateConversionRates();
+    }
+});
 
-    const updateRate = () => {
-        const visitors = parseFloat(visitorsInput.value) || 0;
-        const conversions = parseFloat(conversionsInput.value) || 0;
-        const rate = visitors > 0 ? (conversions / visitors * 100) : 0;
-        rateDisplay.textContent = rate.toFixed(2) + '%';
-    };
+function addVariant() {
+    const container = document.getElementById('variants-container');
+    const testVariants = container.querySelectorAll('.test-variant');
 
-    visitorsInput.addEventListener('input', updateRate);
-    conversionsInput.addEventListener('input', updateRate);
+    if (testVariants.length >= 4) { // Control + 4 variants = 5 total
+        alert('Maximum of 5 variants (including control)');
+        return;
+    }
+
+    variantCounter++;
+    const variantId = variantCounter;
+    const variantLabel = variantLabels[testVariants.length] || `V${testVariants.length + 1}`;
+
+    const variantHTML = `
+        <div class="variant-input test-variant" data-variant-id="${variantId}">
+            <div class="variant-header">
+                <h3>Variant ${variantLabel}</h3>
+                <button class="remove-variant-btn" onclick="removeVariant(${variantId})" title="Remove variant">✕</button>
+            </div>
+            <div class="input-group">
+                <label>Visitors</label>
+                <input type="number" class="variant-visitors-input" data-variant="${variantId}" min="0" value="10000">
+            </div>
+            <div class="input-group">
+                <label>Conversions</label>
+                <input type="number" class="variant-conversions-input" data-variant="${variantId}" min="0" value="500">
+            </div>
+            <div class="conversion-rate">
+                <span>Conversion Rate: <strong class="variant-rate-display" data-variant="${variantId}">5.00%</strong></span>
+            </div>
+        </div>
+    `;
+
+    container.insertAdjacentHTML('beforeend', variantHTML);
+    updateVariantCount();
+    updateConversionRates();
+}
+
+function removeVariant(variantId) {
+    const variant = document.querySelector(`.test-variant[data-variant-id="${variantId}"]`);
+    if (variant) {
+        variant.remove();
+        updateVariantCount();
+    }
+}
+
+function updateVariantCount() {
+    const container = document.getElementById('variants-container');
+    const allVariants = container.querySelectorAll('.variant-input');
+    const count = allVariants.length;
+
+    document.getElementById('variant-count').textContent = count;
+
+    const addBtn = document.getElementById('add-variant-btn');
+    if (count >= 5) {
+        addBtn.disabled = true;
+        addBtn.textContent = '✓ Max Variants';
+    } else {
+        addBtn.disabled = false;
+        addBtn.textContent = '+ Add Variant';
+    }
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+    updateConversionRates();
+    updateVariantCount();
 });
 
 // Statistical functions
@@ -300,23 +380,74 @@ function analyzeTestBayesian(controlVisitors, controlConversions, variantVisitor
 }
 
 function analyzeTest() {
-    const controlVisitors = parseInt(document.getElementById('control-visitors').value);
-    const controlConversions = parseInt(document.getElementById('control-conversions').value);
-    const variantVisitors = parseInt(document.getElementById('variant-visitors').value);
-    const variantConversions = parseInt(document.getElementById('variant-conversions').value);
+    // Collect control data
+    const controlInput = document.querySelector('.variant-visitors-input[data-variant="control"]');
+    const controlConvInput = document.querySelector('.variant-conversions-input[data-variant="control"]');
+
+    if (!controlInput || !controlConvInput) {
+        alert('Control variant data is missing!');
+        return;
+    }
+
+    const controlVisitors = parseInt(controlInput.value);
+    const controlConversions = parseInt(controlConvInput.value);
+
+    // Collect all test variants
+    const testVariants = [];
+    document.querySelectorAll('.test-variant').forEach(variant => {
+        const variantId = variant.dataset.variantId;
+        const visitorsInput = variant.querySelector('.variant-visitors-input');
+        const conversionsInput = variant.querySelector('.variant-conversions-input');
+
+        if (visitorsInput && conversionsInput) {
+            const visitors = parseInt(visitorsInput.value);
+            const conversions = parseInt(conversionsInput.value);
+
+            testVariants.push({
+                id: variantId,
+                visitors: visitors,
+                conversions: conversions,
+                label: variant.querySelector('h3').textContent
+            });
+        }
+    });
 
     // Validation
-    if (controlConversions > controlVisitors || variantConversions > variantVisitors) {
-        alert('Conversions cannot exceed visitors!');
+    if (controlConversions > controlVisitors) {
+        alert('Control conversions cannot exceed control visitors!');
+        return;
+    }
+
+    for (let v of testVariants) {
+        if (v.conversions > v.visitors) {
+            alert(`${v.label} conversions cannot exceed visitors!`);
+            return;
+        }
+    }
+
+    if (testVariants.length === 0) {
+        alert('Please add at least one test variant!');
         return;
     }
 
     const method = document.querySelector('input[name="method"]:checked').value;
 
-    if (method === 'frequentist') {
-        analyzeTestFrequentist(controlVisitors, controlConversions, variantVisitors, variantConversions);
+    // For now, only compare first variant with control (multi-variant comparison coming soon)
+    if (testVariants.length === 1) {
+        if (method === 'frequentist') {
+            analyzeTestFrequentist(controlVisitors, controlConversions, testVariants[0].visitors, testVariants[0].conversions);
+        } else {
+            analyzeTestBayesian(controlVisitors, controlConversions, testVariants[0].visitors, testVariants[0].conversions);
+        }
     } else {
-        analyzeTestBayesian(controlVisitors, controlConversions, variantVisitors, variantConversions);
+        // Multiple variants - show simple comparison for now
+        alert(`Multi-variant analysis: Currently analyzing ${testVariants.length} variants against control. Full multi-variant comparison will compare each against control.`);
+
+        if (method === 'frequentist') {
+            analyzeTestFrequentist(controlVisitors, controlConversions, testVariants[0].visitors, testVariants[0].conversions);
+        } else {
+            analyzeTestBayesian(controlVisitors, controlConversions, testVariants[0].visitors, testVariants[0].conversions);
+        }
     }
 
     document.getElementById('analysis-results').style.display = 'block';
