@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="1.2.0">
+    <meta name="version" content="1.3.0">
     <meta name="build-date" content="2026-01-15">
     <meta name="description" content="A/B Test Calculator with Frequentist and Bayesian statistical analysis">
     <meta name="author" content="jeremy-jouffroy">
@@ -30,19 +30,31 @@
 
             <div class="calculator-grid">
                 <div class="input-group">
-                    <label for="baseline-conv">Baseline Conversion Rate (%)</label>
+                    <label for="baseline-conv">
+                        Baseline Conversion Rate (%)
+                        <span class="tooltip-icon">ⓘ</span>
+                        <span class="tooltip">Your current conversion rate before any changes.<br><br><strong>Example:</strong> If 50 out of 1,000 visitors convert, your baseline is 5%.</span>
+                    </label>
                     <input type="number" id="baseline-conv" step="0.01" min="0" max="100" value="5">
                     <span class="help-text">Your current conversion rate</span>
                 </div>
 
                 <div class="input-group">
-                    <label for="mde">Minimum Detectable Effect (%)</label>
+                    <label for="mde">
+                        Minimum Detectable Effect (%)
+                        <span class="tooltip-icon">ⓘ</span>
+                        <span class="tooltip">The smallest improvement your test can reliably detect with your available traffic.<br><br><strong>Example:</strong> If your baseline is 3% and MDE is 15%, your test will only detect changes that shift conversion to at least 3.45% (3% × 1.15) — smaller gains will be invisible, even if real.</span>
+                    </label>
                     <input type="number" id="mde" step="1" min="1" max="100" value="2">
                     <span class="help-text">Smallest improvement worth detecting (relative)</span>
                 </div>
 
                 <div class="input-group">
-                    <label for="confidence">Confidence Level</label>
+                    <label for="confidence">
+                        Confidence Level
+                        <span class="tooltip-icon">ⓘ</span>
+                        <span class="tooltip">The probability that you won't declare a winner when there's no real difference (avoids false positives).<br><br><strong>Example:</strong> 95% confidence means only 5% chance of falsely claiming a winner when variants are actually equal.</span>
+                    </label>
                     <select id="confidence">
                         <option value="0.90">90%</option>
                         <option value="0.95" selected>95%</option>
@@ -51,7 +63,11 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="power">Statistical Power</label>
+                    <label for="power">
+                        Statistical Power
+                        <span class="tooltip-icon">ⓘ</span>
+                        <span class="tooltip">The probability that you'll detect a real difference when it exists (avoids false negatives).<br><br><strong>Example:</strong> 80% power means 20% chance of missing a real improvement and incorrectly keeping your original version.</span>
+                    </label>
                     <select id="power">
                         <option value="0.70">70%</option>
                         <option value="0.80" selected>80%</option>
@@ -60,13 +76,21 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="variants">Number of Variants</label>
+                    <label for="variants">
+                        Number of Variants
+                        <span class="tooltip-icon">ⓘ</span>
+                        <span class="tooltip">Total number of versions you're testing, including the control.<br><br><strong>Example:</strong> Testing your original page (A) against 2 new designs (B and C) = 3 variants total.</span>
+                    </label>
                     <input type="number" id="variants" min="2" max="10" value="2">
                     <span class="help-text">Including control (minimum 2)</span>
                 </div>
 
                 <div class="input-group">
-                    <label for="daily-traffic">Daily Traffic</label>
+                    <label for="daily-traffic">
+                        Daily Traffic
+                        <span class="tooltip-icon">ⓘ</span>
+                        <span class="tooltip">Average number of visitors per day to the page you're testing.<br><br><strong>Example:</strong> If your landing page gets 500 visits on weekdays and 800 on weekends, your average is about 600/day.</span>
+                    </label>
                     <input type="number" id="daily-traffic" min="1" value="10000">
                     <span class="help-text">Average visitors per day</span>
                 </div>
@@ -255,19 +279,31 @@
 
             <div class="calculator-grid">
                 <div class="input-group">
-                    <label for="mde-baseline">Baseline Conversion Rate (%)</label>
+                    <label for="mde-baseline">
+                        Baseline Conversion Rate (%)
+                        <span class="tooltip-icon">ⓘ</span>
+                        <span class="tooltip">Your current conversion rate before any changes.<br><br><strong>Example:</strong> If 50 out of 1,000 visitors convert, your baseline is 5%.</span>
+                    </label>
                     <input type="number" id="mde-baseline" step="0.01" min="0.01" max="99.99" value="5" required>
                     <span class="help-text">Current conversion rate (e.g., 5 for 5%)</span>
                 </div>
 
                 <div class="input-group">
-                    <label for="mde-sample">Sample Size per Variant</label>
+                    <label for="mde-sample">
+                        Sample Size per Variant
+                        <span class="tooltip-icon">ⓘ</span>
+                        <span class="tooltip">Number of visitors you can allocate to each variant in your test.<br><br><strong>Example:</strong> If you have 20,000 total visitors for an A/B test (2 variants), you have 10,000 per variant.</span>
+                    </label>
                     <input type="number" id="mde-sample" min="100" value="10000" required>
                     <span class="help-text">Number of visitors per variant</span>
                 </div>
 
                 <div class="input-group">
-                    <label for="mde-confidence">Confidence Level</label>
+                    <label for="mde-confidence">
+                        Confidence Level
+                        <span class="tooltip-icon">ⓘ</span>
+                        <span class="tooltip">The probability that you won't declare a winner when there's no real difference (avoids false positives).<br><br><strong>Example:</strong> 95% confidence means only 5% chance of falsely claiming a winner when variants are actually equal.</span>
+                    </label>
                     <select id="mde-confidence">
                         <option value="0.90">90%</option>
                         <option value="0.95" selected>95%</option>
@@ -276,7 +312,11 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="mde-power">Statistical Power</label>
+                    <label for="mde-power">
+                        Statistical Power
+                        <span class="tooltip-icon">ⓘ</span>
+                        <span class="tooltip">The probability that you'll detect a real difference when it exists (avoids false negatives).<br><br><strong>Example:</strong> 80% power means 20% chance of missing a real improvement and incorrectly keeping your original version.</span>
+                    </label>
                     <select id="mde-power">
                         <option value="0.70">70%</option>
                         <option value="0.80" selected>80%</option>
@@ -313,7 +353,7 @@
         <footer>
             <p>This calculator uses both Frequentist and Bayesian statistical methods for robust A/B test analysis.</p>
             <p class="warning">⚠ Warning: Do not "peek" at results before reaching your planned sample size, as this increases false positive rates.</p>
-            <p class="version-info">Version 1.2.0 | Build Date: 2026-01-15</p>
+            <p class="version-info">Version 1.3.0 | Build Date: 2026-01-15</p>
         </footer>
     </div>
 
