@@ -29,11 +29,6 @@ Choose between two statistical approaches:
 - Monte Carlo simulation (configurable samples)
 - Customizable priors (Beta distribution)
 
-### 📈 Minimum Detectable Effect Calculator
-- Calculate the smallest improvement you can reliably detect
-- Based on your sample size and statistical parameters
-- Helps set realistic test expectations
-
 ## Usage
 
 Simply open `index.html` in your browser or visit the GitHub Pages deployment.
