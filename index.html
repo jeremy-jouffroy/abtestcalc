@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="2.0.0">
+    <meta name="version" content="2.1.0">
     <meta name="build-date" content="2026-01-15">
     <meta name="description" content="A/B Test Calculator with Frequentist and Bayesian statistical analysis">
     <meta name="author" content="jeremy-jouffroy">
@@ -31,7 +31,6 @@
                 <div class="input-group">
                     <label for="baseline-conv">
                         Baseline Conversion Rate (%)
-                        <span class="tooltip-icon">ⓘ</span>
                         <span class="tooltip">Your current conversion rate before any changes.<br><br><strong>Example:</strong> If 50 out of 1,000 visitors convert, your baseline is 5%.</span>
                     </label>
                     <input type="number" id="baseline-conv" step="0.01" min="0" max="100" value="5">
@@ -41,7 +40,6 @@
                 <div class="input-group">
                     <label for="mde">
                         Minimum Detectable Effect (%)
-                        <span class="tooltip-icon">ⓘ</span>
                         <span class="tooltip">The smallest improvement your test can reliably detect with your available traffic.<br><br><strong>Example:</strong> If your baseline is 3% and MDE is 15%, your test will only detect changes that shift conversion to at least 3.45% (3% × 1.15) — smaller gains will be invisible, even if real.</span>
                     </label>
                     <input type="number" id="mde" step="1" min="1" max="100" value="2">
@@ -51,7 +49,6 @@
                 <div class="input-group">
                     <label for="confidence">
                         Confidence Level
-                        <span class="tooltip-icon">ⓘ</span>
                         <span class="tooltip">The probability that you won't declare a winner when there's no real difference (avoids false positives).<br><br><strong>Example:</strong> 95% confidence means only 5% chance of falsely claiming a winner when variants are actually equal.</span>
                     </label>
                     <select id="confidence">
@@ -64,7 +61,6 @@
                 <div class="input-group">
                     <label for="power">
                         Statistical Power
-                        <span class="tooltip-icon">ⓘ</span>
                         <span class="tooltip">The probability that you'll detect a real difference when it exists (avoids false negatives).<br><br><strong>Example:</strong> 80% power means 20% chance of missing a real improvement and incorrectly keeping your original version.</span>
                     </label>
                     <select id="power">
@@ -77,7 +73,6 @@
                 <div class="input-group">
                     <label for="variants">
                         Number of Variants
-                        <span class="tooltip-icon">ⓘ</span>
                         <span class="tooltip">Total number of versions you're testing, including the control.<br><br><strong>Example:</strong> Testing your original page (A) against 2 new designs (B and C) = 3 variants total.</span>
                     </label>
                     <input type="number" id="variants" min="2" max="10" value="2">
@@ -87,7 +82,6 @@
                 <div class="input-group">
                     <label for="daily-traffic">
                         Daily Traffic
-                        <span class="tooltip-icon">ⓘ</span>
                         <span class="tooltip">Average number of visitors per day to the page you're testing.<br><br><strong>Example:</strong> If your landing page gets 500 visits on weekdays and 800 on weekends, your average is about 600/day.</span>
                     </label>
                     <input type="number" id="daily-traffic" min="1" value="10000">
@@ -146,7 +140,6 @@
             <div class="method-selector">
                 <div class="method-selector-header">
                     <span class="method-title">Statistical Method</span>
-                    <span class="tooltip-icon">ⓘ</span>
                     <span class="tooltip method-tooltip">Choose your analysis approach:<br><br><strong>Frequentist:</strong> Traditional hypothesis testing with p-values. Tells you if results are "statistically significant" (p < 0.05). Good for binary decisions.<br><br><strong>Bayesian:</strong> Calculates probability that one variant is better. Provides probability statements (e.g., "95% chance B beats A"). Better for understanding magnitude of difference and making business decisions.</span>
                 </div>
                 <label class="method-label">
@@ -202,7 +195,6 @@
             <div id="bayesian-inputs" class="bayesian-section" style="display: none;">
                 <div class="bayesian-header">
                     <h3>Bayesian Priors (Optional)</h3>
-                    <span class="tooltip-icon bayesian-tooltip-icon">ⓘ</span>
                     <span class="tooltip bayesian-main-tooltip">Priors represent your beliefs before seeing the data. Default values (α=1, β=1) represent no prior knowledge (uniform prior).<br><br><strong>When to adjust:</strong> If you have historical data or strong beliefs about conversion rates, you can encode that knowledge here. For most cases, leave defaults.</span>
                 </div>
                 <p class="help-text">Leave default for non-informative priors</p>
@@ -211,7 +203,7 @@
                     <div class="input-group">
                         <label for="prior-alpha">
                             Prior Alpha (α)
-                            <span class="tooltip-icon">ⓘ</span>
+                            <span class="tooltip-icon">🤔</span>
                             <span class="tooltip">Number of prior "successes" in your belief. Higher values mean you believe conversion rate is higher.<br><br><strong>Example:</strong> If historically you've seen 10 conversions out of 100 visitors, you might use α=10. Default α=1 means no strong prior belief.</span>
                         </label>
                         <input type="number" id="prior-alpha" step="0.1" min="0.1" value="1">
@@ -220,7 +212,7 @@
                     <div class="input-group">
                         <label for="prior-beta">
                             Prior Beta (β)
-                            <span class="tooltip-icon">ⓘ</span>
+                            <span class="tooltip-icon">🤔</span>
                             <span class="tooltip">Number of prior "failures" in your belief. Higher values mean you believe conversion rate is lower.<br><br><strong>Example:</strong> If historically you've seen 90 non-conversions out of 100 visitors, you might use β=90. Default β=1 means no strong prior belief.</span>
                         </label>
                         <input type="number" id="prior-beta" step="0.1" min="0.1" value="1">
@@ -229,7 +221,7 @@
                     <div class="input-group">
                         <label for="monte-carlo-samples">
                             Monte Carlo Samples
-                            <span class="tooltip-icon">ⓘ</span>
+                            <span class="tooltip-icon">🤔</span>
                             <span class="tooltip">Number of random samples used to calculate probabilities. More samples = more accurate results but slower.<br><br><strong>Example:</strong> 100,000 samples (default) is accurate for most cases. Use 1,000,000 for very precise results or when probabilities are close to 50%.</span>
                         </label>
                         <input type="number" id="monte-carlo-samples" min="1000" max="1000000" step="1000" value="100000">
@@ -241,6 +233,9 @@
             <button class="calculate-btn" onclick="analyzeTest()">Analyze Results</button>
 
             <div id="analysis-results" class="results-box" style="display: none;">
+                <div class="analysis-header">
+                    <h3 id="analyzed-variant-title">Analyzing Best Performer</h3>
+                </div>
                 <!-- Frequentist Results -->
                 <div id="frequentist-results">
                     <h3>Frequentist Analysis</h3>
@@ -302,7 +297,7 @@
         <footer>
             <p>This calculator uses both Frequentist and Bayesian statistical methods for robust A/B test analysis.</p>
             <p class="warning">⚠ Warning: Do not "peek" at results before reaching your planned sample size, as this increases false positive rates.</p>
-            <p class="version-info">Version 2.0.0 | Build Date: 2026-01-15</p>
+            <p class="version-info">Version 2.1.0 | Build Date: 2026-01-15</p>
         </footer>
     </div>
 

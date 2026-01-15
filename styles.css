@@ -134,9 +134,8 @@ header h1 {
     color: #333;
     font-size: 0.95em;
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    display: block;
+    cursor: help;
 }
 
 /* Tooltips */
@@ -144,15 +143,12 @@ header h1 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 18px;
-    height: 18px;
-    background: #667eea;
-    color: white;
-    border-radius: 50%;
-    font-size: 0.75em;
-    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    font-size: 1em;
     cursor: help;
     flex-shrink: 0;
+    user-select: none;
 }
 
 .tooltip {
@@ -174,7 +170,7 @@ header h1 {
     transition: opacity 0.3s ease, visibility 0.3s ease;
     z-index: 1000;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    pointer-events: none;
+    pointer-events: auto;
 }
 
 .tooltip::after {
@@ -186,7 +182,9 @@ header h1 {
     border-top-color: #2c3e50;
 }
 
-.tooltip-icon:hover + .tooltip,
+.input-group label:hover .tooltip,
+.method-selector-header:hover .tooltip,
+.bayesian-header:hover .tooltip,
 .tooltip:hover {
     opacity: 1;
     visibility: visible;
@@ -236,6 +234,7 @@ header h1 {
     gap: 8px;
     margin-bottom: 5px;
     position: relative;
+    cursor: help;
 }
 
 .method-title {
@@ -389,6 +388,7 @@ header h1 {
     gap: 8px;
     margin-bottom: 10px;
     position: relative;
+    cursor: help;
 }
 
 .bayesian-section h3 {
@@ -397,7 +397,7 @@ header h1 {
 }
 
 .bayesian-tooltip-icon {
-    background: #ffc107;
+    /* No background needed for emoji */
 }
 
 .bayesian-main-tooltip {
@@ -440,6 +440,21 @@ header h1 {
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     border-radius: 12px;
     animation: slideIn 0.4s ease;
+}
+
+.analysis-header {
+    background: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.analysis-header h3 {
+    color: #667eea;
+    margin: 0;
+    font-size: 1.4em;
 }
 
 @keyframes slideIn {

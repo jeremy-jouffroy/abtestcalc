@@ -247,12 +247,13 @@ function analyzeTestFrequentist(controlVisitors, controlConversions, variantVisi
 
     // Verdict
     const verdict = document.getElementById('verdict');
+    const variantLabel = window.analyzedVariantLabel || 'Variant B';
     if (pValue < 0.05) {
         if (uplift > 0) {
-            verdict.innerHTML = '✅ <strong>Statistically Significant!</strong> Variant B performs better than Control A.';
+            verdict.innerHTML = `✅ <strong>Statistically Significant!</strong> ${variantLabel} performs better than Control A.`;
             verdict.className = 'verdict success';
         } else {
-            verdict.innerHTML = '❌ <strong>Statistically Significant!</strong> Variant B performs worse than Control A.';
+            verdict.innerHTML = `❌ <strong>Statistically Significant!</strong> ${variantLabel} performs worse than Control A.`;
             verdict.className = 'verdict danger';
         }
     } else {
@@ -361,17 +362,18 @@ function analyzeTestBayesian(controlVisitors, controlConversions, variantVisitor
 
     // Verdict
     const verdict = document.getElementById('bayes-verdict');
+    const variantLabel = window.analyzedVariantLabel || 'Variant B';
     if (probBBeatsA > 95) {
-        verdict.innerHTML = `✅ <strong>Strong Evidence!</strong> There's a ${probBBeatsA.toFixed(1)}% probability that Variant B is better than Control A.`;
+        verdict.innerHTML = `✅ <strong>Strong Evidence!</strong> There's a ${probBBeatsA.toFixed(1)}% probability that ${variantLabel} is better than Control A.`;
         verdict.className = 'verdict success';
     } else if (probBBeatsA > 90) {
-        verdict.innerHTML = `⚠️ <strong>Moderate Evidence.</strong> There's a ${probBBeatsA.toFixed(1)}% probability that Variant B is better. Consider collecting more data.`;
+        verdict.innerHTML = `⚠️ <strong>Moderate Evidence.</strong> There's a ${probBBeatsA.toFixed(1)}% probability that ${variantLabel} is better. Consider collecting more data.`;
         verdict.className = 'verdict warning';
     } else if (probBBeatsA < 50) {
-        verdict.innerHTML = `❌ <strong>Control A is likely better.</strong> There's only a ${probBBeatsA.toFixed(1)}% probability that Variant B is better.`;
+        verdict.innerHTML = `❌ <strong>Control A is likely better.</strong> There's only a ${probBBeatsA.toFixed(1)}% probability that ${variantLabel} is better.`;
         verdict.className = 'verdict danger';
     } else {
-        verdict.innerHTML = `⚠️ <strong>Inconclusive.</strong> There's a ${probBBeatsA.toFixed(1)}% probability that Variant B is better. Collect more data for a clear decision.`;
+        verdict.innerHTML = `⚠️ <strong>Inconclusive.</strong> There's a ${probBBeatsA.toFixed(1)}% probability that ${variantLabel} is better. Collect more data for a clear decision.`;
         verdict.className = 'verdict warning';
     }
 
@@ -432,22 +434,34 @@ function analyzeTest() {
 
     const method = document.querySelector('input[name="method"]:checked').value;
 
-    // For now, only compare first variant with control (multi-variant comparison coming soon)
-    if (testVariants.length === 1) {
-        if (method === 'frequentist') {
-            analyzeTestFrequentist(controlVisitors, controlConversions, testVariants[0].visitors, testVariants[0].conversions);
-        } else {
-            analyzeTestBayesian(controlVisitors, controlConversions, testVariants[0].visitors, testVariants[0].conversions);
-        }
-    } else {
-        // Multiple variants - show simple comparison for now
-        alert(`Multi-variant analysis: Currently analyzing ${testVariants.length} variants against control. Full multi-variant comparison will compare each against control.`);
+    // Find the best performing variant (highest conversion rate)
+    let bestVariant = testVariants[0];
+    let bestConversionRate = testVariants[0].conversions / testVariants[0].visitors;
 
-        if (method === 'frequentist') {
-            analyzeTestFrequentist(controlVisitors, controlConversions, testVariants[0].visitors, testVariants[0].conversions);
-        } else {
-            analyzeTestBayesian(controlVisitors, controlConversions, testVariants[0].visitors, testVariants[0].conversions);
+    for (let i = 1; i < testVariants.length; i++) {
+        const convRate = testVariants[i].conversions / testVariants[i].visitors;
+        if (convRate > bestConversionRate) {
+            bestConversionRate = convRate;
+            bestVariant = testVariants[i];
         }
+    }
+
+    // Store which variant is being analyzed for display purposes
+    window.analyzedVariantLabel = bestVariant.label;
+
+    // Update the analysis header
+    const titleElement = document.getElementById('analyzed-variant-title');
+    if (testVariants.length === 1) {
+        titleElement.textContent = `Analyzing: ${bestVariant.label} vs Control A`;
+    } else {
+        titleElement.textContent = `Analyzing Best Performer: ${bestVariant.label} vs Control A (${(bestConversionRate * 100).toFixed(2)}% conversion)`;
+    }
+
+    // Analyze the best performing variant against control
+    if (method === 'frequentist') {
+        analyzeTestFrequentist(controlVisitors, controlConversions, bestVariant.visitors, bestVariant.conversions);
+    } else {
+        analyzeTestBayesian(controlVisitors, controlConversions, bestVariant.visitors, bestVariant.conversions);
     }
 
     document.getElementById('analysis-results').style.display = 'block';
