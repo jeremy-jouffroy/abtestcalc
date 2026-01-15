@@ -386,6 +386,32 @@ header h1 {
     font-weight: 500;
 }
 
+/* MDE Interpretation */
+.mde-explanation {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 1.05em;
+}
+
+.mde-interpretation {
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.mde-interpretation p {
+    margin: 0;
+    color: #333;
+    line-height: 1.6;
+}
+
+.mde-interpretation span {
+    color: #667eea;
+    font-weight: 700;
+}
+
 /* Verdict */
 .verdict {
     padding: 20px;

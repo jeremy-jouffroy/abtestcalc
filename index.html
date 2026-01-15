@@ -247,17 +247,19 @@
         <!-- MDE Calculator Tab -->
         <div id="mde" class="tab-content">
             <h2>Minimum Detectable Effect Calculator</h2>
-            <p class="description">Calculate the smallest improvement you can reliably detect given your constraints.</p>
+            <p class="description">Calculate the smallest improvement you can reliably detect given your constraints. This helps you understand if your test is sensitive enough to detect meaningful changes.</p>
 
             <div class="calculator-grid">
                 <div class="input-group">
                     <label for="mde-baseline">Baseline Conversion Rate (%)</label>
-                    <input type="number" id="mde-baseline" step="0.01" min="0" max="100" value="5">
+                    <input type="number" id="mde-baseline" step="0.01" min="0.01" max="99.99" value="5" required>
+                    <span class="help-text">Current conversion rate (e.g., 5 for 5%)</span>
                 </div>
 
                 <div class="input-group">
                     <label for="mde-sample">Sample Size per Variant</label>
-                    <input type="number" id="mde-sample" min="1" value="10000">
+                    <input type="number" id="mde-sample" min="100" value="10000" required>
+                    <span class="help-text">Number of visitors per variant</span>
                 </div>
 
                 <div class="input-group">
@@ -283,19 +285,23 @@
 
             <div id="mde-results" class="results-box" style="display: none;">
                 <h3>Results</h3>
+                <p class="mde-explanation">With your sample size, you can reliably detect the following effect:</p>
                 <div class="result-grid">
                     <div class="result-item">
-                        <span class="result-label">Minimum Detectable Effect:</span>
+                        <span class="result-label">Minimum Detectable Effect (Relative):</span>
                         <span class="result-value" id="mde-value">-</span>
                     </div>
                     <div class="result-item">
-                        <span class="result-label">Variant Conversion Rate:</span>
+                        <span class="result-label">Required Variant Conversion Rate:</span>
                         <span class="result-value" id="mde-variant-rate">-</span>
                     </div>
                     <div class="result-item">
-                        <span class="result-label">Absolute Difference:</span>
+                        <span class="result-label">Absolute Difference Required:</span>
                         <span class="result-value" id="mde-abs-diff">-</span>
                     </div>
+                </div>
+                <div class="mde-interpretation">
+                    <p><strong>Interpretation:</strong> Your test can detect a relative improvement of <span id="mde-interpretation-value">-</span> or more. If you expect a smaller effect, you'll need a larger sample size.</p>
                 </div>
             </div>
         </div>

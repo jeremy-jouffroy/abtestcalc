@@ -329,17 +329,48 @@ function calculateMDE() {
     const confidence = parseFloat(document.getElementById('mde-confidence').value);
     const power = parseFloat(document.getElementById('mde-power').value);
 
+    // Validation
+    if (!baseline || baseline <= 0 || baseline >= 1) {
+        alert('Please enter a valid baseline conversion rate between 0 and 100%');
+        return;
+    }
+
+    if (!sampleSize || sampleSize < 1) {
+        alert('Please enter a valid sample size (at least 1)');
+        return;
+    }
+
     const zAlpha = zScore(confidence);
     const zBeta = zScore(power);
 
-    // MDE calculation
-    const effect = Math.sqrt((zAlpha + zBeta) ** 2 * baseline * (1 - baseline) / sampleSize);
-    const mdeRelative = (effect / baseline) * 100;
-    const variantRate = baseline + effect;
+    // MDE calculation using two-proportion test
+    // We need to solve iteratively since pooled proportion depends on variant rate
+    // Simplified approach: use baseline for initial estimate
+    let variantRate = baseline;
+    let iterations = 0;
+    const maxIterations = 10;
+
+    // Iterative calculation for more accuracy
+    while (iterations < maxIterations) {
+        const pooledP = (baseline + variantRate) / 2;
+        const se = Math.sqrt(pooledP * (1 - pooledP) * (2 / sampleSize));
+        const effect = (zAlpha + zBeta) * se;
+        const newVariantRate = baseline + effect;
+
+        if (Math.abs(newVariantRate - variantRate) < 0.00001) {
+            break;
+        }
+        variantRate = newVariantRate;
+        iterations++;
+    }
+
+    const absoluteEffect = variantRate - baseline;
+    const mdeRelative = (absoluteEffect / baseline) * 100;
 
     // Display results
     document.getElementById('mde-value').textContent = mdeRelative.toFixed(2) + '%';
     document.getElementById('mde-variant-rate').textContent = (variantRate * 100).toFixed(2) + '%';
-    document.getElementById('mde-abs-diff').textContent = (effect * 100).toFixed(2) + ' percentage points';
+    document.getElementById('mde-abs-diff').textContent = (absoluteEffect * 100).toFixed(2) + ' percentage points';
+    document.getElementById('mde-interpretation-value').textContent = mdeRelative.toFixed(2) + '%';
     document.getElementById('mde-results').style.display = 'block';
 }
