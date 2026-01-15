@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A/B Test Calculator - Plan, Analyze & Optimize</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>A/B Test Calculator</h1>
+            <p class="subtitle">Plan, analyze, and optimize your experiments with statistical confidence</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" data-tab="sample-size">Sample Size Calculator</button>
+            <button class="tab-button" data-tab="analyze">Analyze Test Results</button>
+            <button class="tab-button" data-tab="mde">Minimum Detectable Effect</button>
+        </div>
+
+        <!-- Sample Size Calculator Tab -->
+        <div id="sample-size" class="tab-content active">
+            <h2>Calculate Required Sample Size</h2>
+            <p class="description">Determine how many visitors you need and how long your test should run.</p>
+
+            <div class="calculator-grid">
+                <div class="input-group">
+                    <label for="baseline-conv">Baseline Conversion Rate (%)</label>
+                    <input type="number" id="baseline-conv" step="0.01" min="0" max="100" value="5">
+                    <span class="help-text">Your current conversion rate</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="mde">Minimum Detectable Effect (%)</label>
+                    <input type="number" id="mde" step="1" min="1" max="100" value="10">
+                    <span class="help-text">Smallest improvement worth detecting (relative)</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="confidence">Confidence Level</label>
+                    <select id="confidence">
+                        <option value="0.90">90%</option>
+                        <option value="0.95" selected>95%</option>
+                        <option value="0.99">99%</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="power">Statistical Power</label>
+                    <select id="power">
+                        <option value="0.70">70%</option>
+                        <option value="0.80" selected>80%</option>
+                        <option value="0.90">90%</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="variants">Number of Variants</label>
+                    <input type="number" id="variants" min="2" max="10" value="2">
+                    <span class="help-text">Including control (minimum 2)</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="daily-traffic">Daily Traffic</label>
+                    <input type="number" id="daily-traffic" min="1" value="10000">
+                    <span class="help-text">Average visitors per day</span>
+                </div>
+            </div>
+
+            <button class="calculate-btn" onclick="calculateSampleSize()">Calculate Sample Size</button>
+
+            <div id="sample-results" class="results-box" style="display: none;">
+                <h3>Results</h3>
+                <div class="result-grid">
+                    <div class="result-item">
+                        <span class="result-label">Sample Size per Variant:</span>
+                        <span class="result-value" id="sample-per-variant">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Sample Size:</span>
+                        <span class="result-value" id="total-sample">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Estimated Duration:</span>
+                        <span class="result-value" id="duration">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Expected Variant Conversion:</span>
+                        <span class="result-value" id="expected-variant-conv">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analyze Test Results Tab -->
+        <div id="analyze" class="tab-content">
+            <h2>Analyze Your A/B Test Results</h2>
+            <p class="description">Evaluate statistical significance using both Frequentist and Bayesian approaches.</p>
+
+            <div class="method-selector">
+                <label class="method-label">
+                    <input type="radio" name="method" value="frequentist" checked>
+                    <span>Frequentist (p-value, confidence intervals)</span>
+                </label>
+                <label class="method-label">
+                    <input type="radio" name="method" value="bayesian">
+                    <span>Bayesian (probability of being best, credible intervals)</span>
+                </label>
+            </div>
+
+            <div class="variants-container">
+                <div class="variant-input">
+                    <h3>Control (A)</h3>
+                    <div class="input-group">
+                        <label for="control-visitors">Visitors</label>
+                        <input type="number" id="control-visitors" min="0" value="10000">
+                    </div>
+                    <div class="input-group">
+                        <label for="control-conversions">Conversions</label>
+                        <input type="number" id="control-conversions" min="0" value="500">
+                    </div>
+                    <div class="conversion-rate">
+                        <span>Conversion Rate: <strong id="control-rate">5.00%</strong></span>
+                    </div>
+                </div>
+
+                <div class="variant-input">
+                    <h3>Variant (B)</h3>
+                    <div class="input-group">
+                        <label for="variant-visitors">Visitors</label>
+                        <input type="number" id="variant-visitors" min="0" value="10000">
+                    </div>
+                    <div class="input-group">
+                        <label for="variant-conversions">Conversions</label>
+                        <input type="number" id="variant-conversions" min="0" value="550">
+                    </div>
+                    <div class="conversion-rate">
+                        <span>Conversion Rate: <strong id="variant-rate">5.50%</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bayesian-specific inputs -->
+            <div id="bayesian-inputs" class="bayesian-section" style="display: none;">
+                <h3>Bayesian Priors (Optional)</h3>
+                <p class="help-text">Leave default for non-informative priors</p>
+
+                <div class="calculator-grid">
+                    <div class="input-group">
+                        <label for="prior-alpha">Prior Alpha (α)</label>
+                        <input type="number" id="prior-alpha" step="0.1" min="0.1" value="1">
+                        <span class="help-text">Success parameter</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="prior-beta">Prior Beta (β)</label>
+                        <input type="number" id="prior-beta" step="0.1" min="0.1" value="1">
+                        <span class="help-text">Failure parameter</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="monte-carlo-samples">Monte Carlo Samples</label>
+                        <input type="number" id="monte-carlo-samples" min="1000" max="1000000" step="1000" value="100000">
+                        <span class="help-text">Higher = more accurate</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="calculate-btn" onclick="analyzeTest()">Analyze Results</button>
+
+            <div id="analysis-results" class="results-box" style="display: none;">
+                <!-- Frequentist Results -->
+                <div id="frequentist-results">
+                    <h3>Frequentist Analysis</h3>
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <span class="result-label">Relative Uplift:</span>
+                            <span class="result-value" id="uplift">-</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Absolute Difference:</span>
+                            <span class="result-value" id="abs-diff">-</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">P-Value:</span>
+                            <span class="result-value" id="p-value">-</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Z-Score:</span>
+                            <span class="result-value" id="z-score">-</span>
+                        </div>
+                        <div class="result-item full-width">
+                            <span class="result-label">95% Confidence Interval:</span>
+                            <span class="result-value" id="conf-interval">-</span>
+                        </div>
+                    </div>
+                    <div class="verdict" id="verdict">-</div>
+                </div>
+
+                <!-- Bayesian Results -->
+                <div id="bayesian-results" style="display: none;">
+                    <h3>Bayesian Analysis</h3>
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <span class="result-label">Probability B Beats A:</span>
+                            <span class="result-value" id="prob-b-beats-a">-</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Expected Loss (choosing A):</span>
+                            <span class="result-value" id="expected-loss-a">-</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Expected Loss (choosing B):</span>
+                            <span class="result-value" id="expected-loss-b">-</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Relative Uplift (Median):</span>
+                            <span class="result-value" id="bayes-uplift">-</span>
+                        </div>
+                        <div class="result-item full-width">
+                            <span class="result-label">95% Credible Interval:</span>
+                            <span class="result-value" id="credible-interval">-</span>
+                        </div>
+                    </div>
+                    <div class="verdict" id="bayes-verdict">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MDE Calculator Tab -->
+        <div id="mde" class="tab-content">
+            <h2>Minimum Detectable Effect Calculator</h2>
+            <p class="description">Calculate the smallest improvement you can reliably detect given your constraints.</p>
+
+            <div class="calculator-grid">
+                <div class="input-group">
+                    <label for="mde-baseline">Baseline Conversion Rate (%)</label>
+                    <input type="number" id="mde-baseline" step="0.01" min="0" max="100" value="5">
+                </div>
+
+                <div class="input-group">
+                    <label for="mde-sample">Sample Size per Variant</label>
+                    <input type="number" id="mde-sample" min="1" value="10000">
+                </div>
+
+                <div class="input-group">
+                    <label for="mde-confidence">Confidence Level</label>
+                    <select id="mde-confidence">
+                        <option value="0.90">90%</option>
+                        <option value="0.95" selected>95%</option>
+                        <option value="0.99">99%</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="mde-power">Statistical Power</label>
+                    <select id="mde-power">
+                        <option value="0.70">70%</option>
+                        <option value="0.80" selected>80%</option>
+                        <option value="0.90">90%</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="calculate-btn" onclick="calculateMDE()">Calculate MDE</button>
+
+            <div id="mde-results" class="results-box" style="display: none;">
+                <h3>Results</h3>
+                <div class="result-grid">
+                    <div class="result-item">
+                        <span class="result-label">Minimum Detectable Effect:</span>
+                        <span class="result-value" id="mde-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Variant Conversion Rate:</span>
+                        <span class="result-value" id="mde-variant-rate">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Absolute Difference:</span>
+                        <span class="result-value" id="mde-abs-diff">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>This calculator uses both Frequentist and Bayesian statistical methods for robust A/B test analysis.</p>
+            <p class="warning">⚠ Warning: Do not "peek" at results before reaching your planned sample size, as this increases false positive rates.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
