@@ -457,6 +457,13 @@ footer p {
     font-weight: 600;
 }
 
+.version-info {
+    font-size: 0.85em;
+    color: #999;
+    margin-top: 15px;
+    font-style: italic;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     body {
