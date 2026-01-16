@@ -620,6 +620,12 @@ footer p {
     font-weight: 600;
 }
 
+.tip {
+    color: #0984e3;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
 .version-info {
     font-size: 0.85em;
     color: #999;
